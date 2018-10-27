@@ -1,0 +1,38 @@
+{
+    "defaultSeverity": "warning",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "rules": {
+        "quotemark": [true, "single", "avoid-escape"],
+        "semicolon": [true, "never"],
+        "indent": [true, "spaces", 4],
+        "max-classes-per-file": [true, 1],
+        "max-file-line-count": [true, 300],
+        "max-line-length": [true, 120],
+        "member-access": true,
+        "member-ordering": [true, {"order": "fields-first"}],
+        "prefer-const": true,
+        "prefer-template": true,
+        "prefer-readonly": true,
+        "prefer-object-spread": true,
+        "triple-equals": true,
+        "no-angle-bracket-type-assertion": true,
+        "arrow-parens": true,
+        "arrow-return-shorthand": true,
+        "class-name": true,
+        "no-var-keyword": true,
+        "curly": true,
+        "newline-before-return": true,
+        "no-consecutive-blank-lines": [true, 1],
+        "no-duplicate-switch-case": true,
+        "no-duplicate-super": true,
+        "jsdoc-format": [true, "check-multiline-start"],
+        "no-redundant-jsdoc": true,
+        "deprecation": true,
+        "eofline": true,
+        "linebreak-style": [true, "LF"],
+        "no-trailing-whitespace": true,
+        "encoding": true
+    }
+}
