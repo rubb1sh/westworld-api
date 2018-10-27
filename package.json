@@ -3,10 +3,11 @@
     "version": "1.0.0",
     "main": "dist/server.js",
     "license": "MIT",
+    "description": "Start building your API with Express JS & Typescript",
     "author": {
         "name": "Mickaël LAO-PANE",
         "email": "mlaopane@gmail.com",
-        "url": "https://gitlab.com/mlaopane"
+        "url": "https://gitlab.com/monkkey/express-typescript"
     },
     "scripts": {
         "dev": "nodemon",
