@@ -12,7 +12,8 @@
     "scripts": {
         "dev": "nodemon",
         "build": "tsc",
-        "serve": "node dist/server.js"
+        "serve": "node dist/server.js",
+        "route": "sh bin/generate_route.sh"
     },
     "dependencies": {
         "dotenv": "^6.1.0",
