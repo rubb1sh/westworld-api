@@ -10,8 +10,8 @@ const router: Router = Router()
 
 // ----- EXAMPLE >> -----
 
-// import users from './routes/users'
-// router.use(users)
+import users from './routes/users'
+router.use(users)
 
 // ----- << EXAMPLE -----
 
