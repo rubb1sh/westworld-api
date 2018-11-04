@@ -9,21 +9,19 @@ const router = Router()
 
 // ----- EXAMPLE >> -----
 
-// function getUsers(request: Request, response: Response) {
-//     response.status(200)
-//     response.json([
-//         {
-//             id: 1,
-//             email: 'toto@gmail.com'
-//         },
-//         {
-//             id: 2,
-//             email: 'tata@gmail.com'
-//         },
-//     ])
-// }
-
-// router.get('/api/users', getUsers)
+router.get('/api/users', function getUsers(request: Request, response: Response) {
+    response.status(200)
+    response.json([
+        {
+            id: 1,
+            email: 'toto@gmail.com'
+        },
+        {
+            id: 2,
+            email: 'tata@gmail.com'
+        },
+    ])
+})
 
 // ----- << EXAMPLE -----
 

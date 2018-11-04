@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import router from './router'
 import Slate, { Position } from './loggers/Slate';
 
@@ -8,6 +9,9 @@ dotenv.load()
 
 // Create the server instance
 const server = express()
+
+// Enable CORS
+server.use(cors())
 
 // Plug in the router
 server.use(router)
