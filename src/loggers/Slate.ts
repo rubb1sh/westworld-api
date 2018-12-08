@@ -39,14 +39,14 @@ export default class Slate {
                 break
             }
             // Fill with spaces on both sides (left & right)
-            case Position.CENTER: {
-                extendedMessage = Array
-                    .from({ length: extension.length })
-                    .reduce(function extendMessage(extendedMessage: string, item: any) {
-                        return extendedMessage + ' '
-                    }, message)
-                break
-            }
+            // case Position.CENTER: {
+            //     extendedMessage = Array
+            //         .from({ length: extension.length })
+            //         .reduce(function extendMessage(extendedMessage: string, item: any) {
+            //             return extendedMessage + ' '
+            //         }, message)
+            //     break
+            // }
             // Fill with spaces on the left
             case Position.RIGHT: {
                 extendedMessage = Slate.prepend(message, extension.length)
@@ -77,32 +77,32 @@ export default class Slate {
             }
             return `${stackedMessage}\n| ${message} |`
         }
-        }
-    
-        private static writeLine(length: number, pattern= '-', options: SlateLineOptions) {
-            const { prefix, suffix } = options
-            const stackedPattern = Array.from({ length }).map((item) => pattern).join('')
-            console.log(`${prefix}${stackedPattern}${suffix}`)
-        }
-    
-        private static open(slateWidth: number) {
-            const options: SlateLineOptions = { prefix: ' ', suffix: ' ' } 
-            Slate.writeLine(slateWidth + 2, '_', options)
-        }
-
-        private static close(slateWidth: number) {
-            const options: SlateLineOptions = { prefix: '|', suffix: '|' } 
-            Slate.writeLine(slateWidth + 2, '_', options)
-        }
-    
-        public static write(messages: string[], position: Position = Position.LEFT) {
-            const longestMessage: string = messages.reduce(Slate.toLongestMessage, '')
-            const stackedMessage: string = messages.reduce(Slate.stackMessage(longestMessage.length, position), '')
-            const slateWidth = longestMessage.length
-    
-            Slate.open(slateWidth)
-            console.log(`${stackedMessage}`)
-            Slate.close(slateWidth)
-            console.log()
-        } 
     }
+
+    private static writeLine(length: number, pattern= '-', options: SlateLineOptions) {
+        const { prefix, suffix } = options
+        const stackedPattern = Array.from({ length }).map((item) => pattern).join('')
+        console.log(`${prefix}${stackedPattern}${suffix}`)
+    }
+
+    private static open(slateWidth: number) {
+        const options: SlateLineOptions = { prefix: ' ', suffix: ' ' } 
+        Slate.writeLine(slateWidth + 2, '_', options)
+    }
+
+    private static close(slateWidth: number) {
+        const options: SlateLineOptions = { prefix: '|', suffix: '|' } 
+        Slate.writeLine(slateWidth + 2, '_', options)
+    }
+
+    public static write(messages: string[], position: Position = Position.LEFT) {
+        const longestMessage: string = messages.reduce(Slate.toLongestMessage, '')
+        const stackedMessage: string = messages.reduce(Slate.stackMessage(longestMessage.length, position), '')
+        const slateWidth = longestMessage.length
+
+        Slate.open(slateWidth)
+        console.log(`${stackedMessage}`)
+        Slate.close(slateWidth)
+        console.log()
+    } 
+}
