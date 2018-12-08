@@ -13,7 +13,8 @@
         "dev": "nodemon",
         "build": "tsc",
         "serve": "node dist/server.js",
-        "route": "sh bin/generate_route.sh"
+        "make:controller": "sh bin/generate_controller.sh",
+        "make:model": "sh bin/generate_model.sh"
     },
     "dependencies": {
         "cors": "^2.8.4",
