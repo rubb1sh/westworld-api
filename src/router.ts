@@ -10,9 +10,9 @@ const router: Router = Router()
 
 // ----- EXAMPLE >> -----
 
-import users from './routes/users'
-router.use(users)
+import users from './controllers/users';
+router.use(users);
 
 // ----- << EXAMPLE -----
 
-export default router
+export default router;
