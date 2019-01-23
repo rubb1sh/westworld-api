@@ -14,7 +14,7 @@
         "build": "tsc",
         "serve": "node dist/server.js",
         "make:controller": "sh bin/make_controller.sh",
-        "make:model": "sh bin/generate_model.sh"
+        "make:model": "sh bin/make_model.sh"
     },
     "dependencies": {
         "cors": "^2.8.4",
