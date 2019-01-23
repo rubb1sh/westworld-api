@@ -12,7 +12,7 @@
     "scripts": {
         "dev": "nodemon",
         "build": "tsc",
-        "serve": "node dist/server.js",
+        "serve": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
         "make:controller": "sh bin/make_controller.sh",
         "make:model": "sh bin/make_model.sh"
     },
