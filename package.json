@@ -13,7 +13,7 @@
         "dev": "nodemon",
         "build": "tsc",
         "serve": "node dist/server.js",
-        "make:controller": "sh bin/generate_controller.sh",
+        "make:controller": "sh bin/make_controller.sh",
         "make:model": "sh bin/generate_model.sh"
     },
     "dependencies": {
