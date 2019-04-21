@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from 'express'
 
 const router: Router = Router()
 
@@ -10,9 +10,9 @@ const router: Router = Router()
 
 // ----- EXAMPLE >> -----
 
-import users from './controllers/users';
-router.use(users);
+import users from './controllers/users'
+router.use(users)
 
 // ----- << EXAMPLE -----
 
-export default router;
+export default router
