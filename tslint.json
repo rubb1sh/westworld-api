@@ -1,8 +1,6 @@
 {
     "defaultSeverity": "warning",
-    "extends": [
-        "tslint:recommended"
-    ],
+    "extends": ["tslint:recommended"],
     "rules": {
         "quotemark": [true, "single", "avoid-escape"],
         "semicolon": [true, "never"],
@@ -11,7 +9,8 @@
         "max-file-line-count": [true, 300],
         "max-line-length": [true, 120],
         "member-access": true,
-        "member-ordering": [true, {"order": "fields-first"}],
+        "member-ordering": [true, { "order": "fields-first" }],
+        "no-console": false,
         "prefer-const": true,
         "prefer-template": true,
         "prefer-readonly": true,

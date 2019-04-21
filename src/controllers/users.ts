@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express'
-import { User } from 'models/User';
+import { User } from 'models/User'
 
 const router = Router()
 
@@ -10,21 +10,23 @@ const router = Router()
 
 // ----- EXAMPLE >> -----
 
-router.get('/api/users', function getUsers(request: Request, response: Response) {
+router.get('/api/users', function getUsers(request, response) {
+    console.log(request.query)
+
     const json: User[] = [
         {
             id: 1,
-            email: 'toto@gmail.com'
+            email: 'toto@gmail.com',
         },
         {
             id: 2,
-            email: 'tata@gmail.com'
+            email: 'tata@gmail.com',
         },
     ]
-    const status = 200;
+    const status = 200
 
     return response.status(status).json(json)
-});
+})
 
 // ----- << EXAMPLE -----
 

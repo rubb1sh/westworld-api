@@ -1,18 +1,10 @@
 import { Router } from 'express'
 
-const router: Router = Router()
-
-/**
- * Import your routes then
- * Add each route into the router
- * You can use the example below to start
- */
-
-// ----- EXAMPLE >> -----
-
+// Routes
 import users from './controllers/users'
-router.use(users)
 
-// ----- << EXAMPLE -----
+// Router
+const router: Router = Router()
+router.use(users)
 
 export default router
