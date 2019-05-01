@@ -2,13 +2,13 @@
 
 ## Requirements
 
-- ___Node.js___ version 8+ with ___npm___ (mandatory)
-- ___Git___ (mandatory)
+-   **_Node.js_** version 10+ with **_npm_** (mandatory)
+-   **_Git_** (mandatory)
 
 ## Recommendations
 
-- ___Yarn___ - A better package manager alternative
-- ___Visual Studio Code___ - A great editor, especially for `Javascript | Typescript`
+-   **_Yarn_** - An alternative dependencies manager
+-   **_Visual Studio Code_** - A popular editor, especially for `Javascript | Typescript`
 
 ## Installation
 
@@ -30,11 +30,32 @@ yarn install
 yarn dev
 ```
 
+Or with docker
+
+```shell
+yarn dockerize
+```
+
+The above command will start the server in a docker service (mapped to http://localhost:<SERVER_PORT>)
+
+In this case, you may need to override the default environment variables.
+Copy the `.env.dist` template in your custom `.env` file.
+
+```shell
+cp .env.dist .env
+```
+
+```ini
+# .env
+NODE_ENV=development
+SERVER_PORT=4000
+```
+
 4. Add your `.ts` files into the `src` directory
 
 ## Start working !
 
-When saving a file :  
+When saving a file :
 
 1. The `.ts` files will be transpiled in `.js` files and output in the `dist` directory
 2. The server will automatically restart
@@ -42,10 +63,10 @@ When saving a file :
 ### Adding routes
 
 1. Create a new `.ts` file in the `routes` folder.  
-The file _MUST_ export an Express Router
+   The file _MUST_ export an Express Router
 2. Add the router inside the `router.ts`
 
-That's it ! (^_^)
+That's it ! (^\_^)
 
 ## Deployment
 

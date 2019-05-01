@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+    node:
+        image: "node:lts-alpine"
+        user: "node"
+        environment:
+            - NODE_ENV=development
+            - SERVER_PORT=4000
+        working_dir: /home/node/app
+        volumes:
+            - ./:/home/node/app
+        expose:
+            - '4000'
+        ports:
+            - '${SERVER_PORT}:4000'
+        command: "yarn dev"
+    # To use the swagger editor, define a SWAGGER_PORT in your .env then coment out the following lines
+    # swagger-editor:
+    #     image: swaggerapi/swagger-editor:latest
+    #     ports:
+    #         - '${SWAGGER_PORT}:8080'
