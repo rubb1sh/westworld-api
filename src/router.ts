@@ -1,12 +1,12 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
 // Import the controllers
-import users from './controllers/users'
+import users from './controllers/users';
 
 // Instantiate the main router
-const router: Router = Router()
+const router: Router = Router();
 
 // Plug the controllers
-router.use(users)
+router.use(users);
 
-export default router
+export default router;
