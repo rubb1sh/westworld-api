@@ -15,6 +15,9 @@ services:
         ports:
             - '${SERVER_PORT}:4000'
         command: "yarn dev"
+        # If you are hosting on Windows, use the following command instead
+        # command: "yarn dev -L"
+
     # To use the swagger editor, define a SWAGGER_PORT in your .env then coment out the following lines
     # swagger-editor:
     #     image: swaggerapi/swagger-editor:latest
