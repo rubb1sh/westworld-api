@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express'
+import { Router } from 'express'
 import { User } from 'models/User'
 
 const router = Router()
@@ -7,9 +7,6 @@ const router = Router()
  * In the example below, we're binding a RequestHandler to a specific URI (/api/users in this case)
  * The RequestHandler returns a list of users
  */
-
-// ----- EXAMPLE >> -----
-
 router.get('/api/users', function getUsers(request, response) {
     console.log(request.query)
 
@@ -27,7 +24,5 @@ router.get('/api/users', function getUsers(request, response) {
 
     return response.status(status).json(json)
 })
-
-// ----- << EXAMPLE -----
 
 export default router
