@@ -15,7 +15,7 @@ server.use(cors());
 server.use(router);
 
 // Resolve the mock listening port
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.PORT || 3000;
 
 // Start the server
 server.listen(port, welcome);

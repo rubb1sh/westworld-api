@@ -5,6 +5,6 @@
         "src/interfaces/*",
         "src/models/*"
     ],
-    "presets": ["@babel/preset-typescript"],
+    "presets": ["@babel/preset-env", "@babel/preset-typescript"],
     "sourceMaps": true
 }

@@ -9,6 +9,9 @@
         "email": "mlaopane@gmail.com",
         "url": "https://gitlab.com/monkkey/express-typescript"
     },
+    "engines": {
+        "node": ">=10.16 <11"
+    },
     "scripts": {
         "check-types": "tsc",
         "dev": "nodemon",
@@ -17,6 +20,7 @@
         "docker:stop": "docker-compose down",
         "build": "rm -rf dist && babel src --extensions \".ts\" --out-dir dist",
         "serve": "node -r dotenv/config -r ts-node/register -r tsconfig-paths/register dist/server.js",
+        "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
         "daemonize": "pm2 start ts-node -- -r tsconfig-paths/register src/server.ts",
         "make:controller": "sh bin/make_controller.sh",
         "make:model": "sh bin/make_model.sh",
@@ -25,6 +29,7 @@
     "dependencies": {
         "@babel/cli": "^7.4.4",
         "@babel/core": "^7.4.5",
+        "@babel/preset-env": "^7.4.5",
         "@babel/preset-typescript": "^7.3.3",
         "@types/cors": "^2.8.5",
         "@types/dotenv": "^6.1.1",
@@ -36,14 +41,14 @@
         "express": "^4.17.1",
         "nunjucks": "^3.2.0",
         "pm2": "^3.5.1",
-        "tsconfig-paths": "^3.8.0"
+        "ts-node": "^8.2.0",
+        "tsconfig-paths": "^3.8.0",
+        "typescript": "^3.5.1"
     },
     "devDependencies": {
         "eslint": "^5.14.1",
         "nodemon": "^1.19.1",
         "prettier": "^1.18.2",
-        "ts-node": "^8.2.0",
-        "tslint": "^5.11.0",
-        "typescript": "^3.5.1"
+        "tslint": "^5.11.0"
     }
 }
