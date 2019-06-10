@@ -1,0 +1,10 @@
+{
+    "ignore": [
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts",
+        "src/interfaces/*",
+        "src/models/*"
+    ],
+    "presets": ["@babel/preset-typescript"],
+    "sourceMaps": true
+}

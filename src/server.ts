@@ -4,8 +4,6 @@ import router from './router';
 import Slate, { Position } from './loggers/Slate';
 
 // Load the environment variables into the process.env object
-import dotenv from 'dotenv';
-dotenv.load();
 
 // Create the server instance
 const server = express();
