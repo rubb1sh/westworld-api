@@ -11,14 +11,15 @@ export function backupFile(targetPath: string, backupPath: string) {
     }
 }
 
-export function getControllersNames() {
-    const filenames = fs.readdirSync(`${process.cwd()}/src/controllers`);
+export function getRoutesNames() {
+    const filenames = fs.readdirSync(`${process.cwd()}/src/routes`);
+
     return filenames.map((filename) => filename.replace('.ts', ''));
 }
 
 export function initializeNunjucks() {
     nunjucks.configure(path.join(__dirname), { autoescape: true });
 }
-export function getMainRouterContent(controllers: string[]) {
-    return nunjucks.render('router.tpl', { controllers });
+export function getMainRouterContent(routes: string[]) {
+    return nunjucks.render('router.tpl', { routes });
 }

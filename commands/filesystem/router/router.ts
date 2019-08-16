@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {
     backupFile,
-    getControllersNames,
+    getRoutesNames,
     getMainRouterContent,
     initializeNunjucks,
 } from './helper';
@@ -14,7 +14,7 @@ if (process.argv.slice(2).includes('--backup')) {
 }
 
 initializeNunjucks();
-const mainRouterContent = getMainRouterContent(getControllersNames());
+const mainRouterContent = getMainRouterContent(getRoutesNames());
 
 // Write in the main router file
 fs.writeFileSync(targetFilePath, mainRouterContent);

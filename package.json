@@ -22,7 +22,8 @@
         "serve": "node -r dotenv/config -r ts-node/register -r tsconfig-paths/register dist/server.js",
         "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
         "daemonize": "pm2 start ts-node -- -r tsconfig-paths/register src/server.ts",
-        "make:controller": "sh bin/make_controller.sh",
+        "make:route": "sh bin/make_route.sh",
+        "make:crud-route": "sh bin/make_crud_route.sh",
         "make:model": "sh bin/make_model.sh",
         "update:router": "ts-node commands/filesystem/router/router.ts"
     },

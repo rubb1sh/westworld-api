@@ -1,16 +1,16 @@
 import { Router } from 'express';
 
-// Import the controllers
-{% for controller in controllers -%}
-    import {{ controller }} from './controllers/{{ controller }}';
+// Import the routes
+{% for route in routes -%}
+    import {{ route }} from './routes/{{ route }}';
 {%- endfor %}
 
 // Instantiate the main router
 const router: Router = Router();
 
-// Plug the controllers
-{% for controller in controllers -%}
-    router.use({{ controller }});
+// Plug the routes
+{% for route in routes -%}
+    router.use({{ route }});
 {%- endfor %}
 
 export default router;

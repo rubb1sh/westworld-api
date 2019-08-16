@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
-// Import the controllers
-import users from './controllers/users';
+// Import the routes
+import users from './routes/users';
 
 // Instantiate the main router
 const router: Router = Router();
 
-// Plug the controllers
+// Plug the routes
 router.use(users);
 
 export default router;
