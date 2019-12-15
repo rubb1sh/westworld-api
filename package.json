@@ -10,7 +10,7 @@
         "url": "https://gitlab.com/monkkey/express-typescript"
     },
     "engines": {
-        "node": ">=10.16 <11"
+        "node": ">=12.13"
     },
     "scripts": {
         "check-types": "tsc",

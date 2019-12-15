@@ -8,7 +8,7 @@ const router = Router();
  * The RequestHandler returns a list of users
  */
 router.get('/v1/users', function getUsers(request, response) {
-    const json: User[] = [
+    const users: User[] = [
         {
             id: 1,
             email: 'toto@gmail.com',
@@ -20,7 +20,7 @@ router.get('/v1/users', function getUsers(request, response) {
     ];
     const status = 200;
 
-    return response.status(status).json(json);
+    return response.status(status).json({ data: users });
 });
 
 export default router;
