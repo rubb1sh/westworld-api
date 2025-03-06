@@ -93,7 +93,11 @@ export class SolanaService {
                 publicKey,
                 amount * LAMPORTS_PER_SOL
             );
-            await this.connection.confirmTransaction(signature);
+            await this.connection.confirmTransaction({
+                signature,
+                blockhash: (await this.connection.getLatestBlockhash()).blockhash,
+                lastValidBlockHeight: (await this.connection.getLatestBlockhash()).lastValidBlockHeight,
+            });
             return signature;
         } catch (error) {
             console.error('请求空投失败:', error);
