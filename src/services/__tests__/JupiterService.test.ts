@@ -108,4 +108,37 @@ describe('JupiterService Integration Tests', () => {
             )).rejects.toThrow();
         });
     });
+
+    describe('Price Formatting', () => {
+        it('应该返回格式化的价格数据', async () => {
+            const amount = 1000000; // 1 USDC
+            
+            const formattedPrice = await jupiterService.getFormattedPrice(
+                USDC_MINT,
+                SOL_MINT,
+                amount
+            );
+            
+            console.log('Formatted price:', JSON.stringify(formattedPrice, null, 2));
+            
+            expect(formattedPrice.inputToken.symbol).toBe('USDC');
+            expect(formattedPrice.outputToken.symbol).toBe('SOL');
+            expect(formattedPrice.inputToken.uiAmount).toBe(1); // 1 USDC
+        });
+
+        it('应该返回人类可读的价格摘要', async () => {
+            const amount = 1000000; // 1 USDC
+            
+            const summary = await jupiterService.getPriceSummary(
+                USDC_MINT,
+                SOL_MINT,
+                amount
+            );
+            
+            console.log('Price summary:\n', summary);
+            
+            expect(summary).toContain('USDC');
+            expect(summary).toContain('SOL');
+        });
+    });
 }); 

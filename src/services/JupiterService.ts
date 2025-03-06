@@ -3,6 +3,34 @@ import { createJupiterApiClient } from '@jup-ag/api';
 
 const TOKEN_LIST_URL = 'https://token.jup.ag/strict';
 
+interface FormattedPrice {
+    inputToken: {
+        symbol: string;
+        amount: number;
+        decimals: number;
+        uiAmount: number;
+    };
+    outputToken: {
+        symbol: string;
+        amount: number;
+        decimals: number;
+        uiAmount: number;
+    };
+    priceImpact: number;
+    route: {
+        steps: Array<{
+            protocol: string;
+            fromToken: string;
+            toToken: string;
+            fromAmount: number;
+            toAmount: number;
+        }>;
+    };
+    fees: {
+        totalFees: number;
+    };
+}
+
 export class JupiterService {
     private jupiterQuoteApi;
     private tokenList: any[] = [];
@@ -124,5 +152,73 @@ export class JupiterService {
                 fee: routeStep.swapInfo.fee
             }))
         };
+    }
+
+    // 获取格式化的价格数据
+    async getFormattedPrice(
+        inputMint: string,
+        outputMint: string,
+        amount: number,
+        slippage: number = 1
+    ): Promise<FormattedPrice> {
+        const price = await this.getPrice(inputMint, outputMint, amount, slippage);
+        const inputToken = await this.getTokenInfo(inputMint);
+        const outputToken = await this.getTokenInfo(outputMint);
+
+        return {
+            inputToken: {
+                symbol: inputToken.symbol,
+                amount: Number(price.inputAmount),
+                decimals: inputToken.decimals,
+                uiAmount: Number(price.inputAmount) / Math.pow(10, inputToken.decimals)
+            },
+            outputToken: {
+                symbol: outputToken.symbol,
+                amount: Number(price.outputAmount),
+                decimals: outputToken.decimals,
+                uiAmount: Number(price.outputAmount) / Math.pow(10, outputToken.decimals)
+            },
+            priceImpact: Number(price.priceImpact),
+            route: {
+                steps: price.route.marketInfos.map(async (step: any) => {
+                    const fromToken = await this.getTokenInfo(step.inputMint);
+                    const toToken = await this.getTokenInfo(step.outputMint);
+                    return {
+                        protocol: step.label,
+                        fromToken: fromToken.symbol,
+                        toToken: toToken.symbol,
+                        fromAmount: Number(step.inAmount) / Math.pow(10, fromToken.decimals),
+                        toAmount: Number(step.outAmount) / Math.pow(10, toToken.decimals)
+                    };
+                })
+            },
+            fees: {
+                totalFees: Number(price.fees.totalFees) / Math.pow(10, outputToken.decimals)
+            }
+        };
+    }
+
+    // 获取人类可读的价格摘要
+    async getPriceSummary(
+        inputMint: string,
+        outputMint: string,
+        amount: number,
+        slippage: number = 1
+    ): Promise<string> {
+        const formattedPrice = await this.getFormattedPrice(inputMint, outputMint, amount, slippage);
+        
+        const summary = [
+            `交易概要:`,
+            `输入: ${formattedPrice.inputToken.uiAmount} ${formattedPrice.inputToken.symbol}`,
+            `输出: ${formattedPrice.outputToken.uiAmount} ${formattedPrice.outputToken.symbol}`,
+            `价格影响: ${formattedPrice.priceImpact}%`,
+            `费用: ${formattedPrice.fees.totalFees} ${formattedPrice.outputToken.symbol}`,
+            `\n路由信息:`,
+            ...(await Promise.all(formattedPrice.route.steps)).map(step => 
+                `${step.protocol}: ${step.fromAmount} ${step.fromToken} → ${step.toAmount} ${step.toToken}`
+            )
+        ];
+
+        return summary.join('\n');
     }
 } 
