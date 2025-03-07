@@ -27,7 +27,9 @@
         "make:model": "sh bin/make_model.sh",
         "update:router": "ts-node commands/filesystem/router/router.ts",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "test:devnet": "SOLANA_NETWORK=devnet jest",
+        "test:mainnet": "SOLANA_NETWORK=mainnet-beta jest"
     },
     "dependencies": {
         "@babel/cli": "^7.4.4",

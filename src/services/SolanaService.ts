@@ -6,22 +6,24 @@ import {
     Transaction,
     SystemProgram,
     sendAndConfirmTransaction,
-    Keypair
+    Keypair,
+    Cluster
 } from '@solana/web3.js';
 
 export class SolanaService {
-    private connection: Connection;
+    private _connection: Connection;
 
     constructor() {
-        // 连接到 Solana 开发网络
-        this.connection = new Connection(clusterApiUrl('devnet'));
+        const network = (process.env.SOLANA_NETWORK || 'devnet') as Cluster;
+        const endpoint = process.env.SOLANA_RPC_ENDPOINT || clusterApiUrl(network);
+        this._connection = new Connection(endpoint);
     }
 
     // 获取账户余额
     async getBalance(publicKeyStr: string): Promise<number> {
         try {
             const publicKey = new PublicKey(publicKeyStr);
-            const balance = await this.connection.getBalance(publicKey);
+            const balance = await this._connection.getBalance(publicKey);
             return balance / LAMPORTS_PER_SOL; // 转换为 SOL
         } catch (error) {
             console.error('获取余额失败:', error);
@@ -33,7 +35,7 @@ export class SolanaService {
     async getAccountInfo(publicKeyStr: string) {
         try {
             const publicKey = new PublicKey(publicKeyStr);
-            const accountInfo = await this.connection.getAccountInfo(publicKey);
+            const accountInfo = await this._connection.getAccountInfo(publicKey);
             return accountInfo;
         } catch (error) {
             console.error('获取账户信息失败:', error);
@@ -73,7 +75,7 @@ export class SolanaService {
             );
 
             const signature = await sendAndConfirmTransaction(
-                this.connection,
+                this._connection,
                 transaction,
                 [fromKeypair]
             );
@@ -89,19 +91,24 @@ export class SolanaService {
     async requestAirdrop(publicKeyStr: string, amount: number) {
         try {
             const publicKey = new PublicKey(publicKeyStr);
-            const signature = await this.connection.requestAirdrop(
+            const signature = await this._connection.requestAirdrop(
                 publicKey,
                 amount * LAMPORTS_PER_SOL
             );
-            await this.connection.confirmTransaction({
+            await this._connection.confirmTransaction({
                 signature,
-                blockhash: (await this.connection.getLatestBlockhash()).blockhash,
-                lastValidBlockHeight: (await this.connection.getLatestBlockhash()).lastValidBlockHeight,
+                blockhash: (await this._connection.getLatestBlockhash()).blockhash,
+                lastValidBlockHeight: (await this._connection.getLatestBlockhash()).lastValidBlockHeight,
             });
             return signature;
         } catch (error) {
             console.error('请求空投失败:', error);
             throw error;
         }
+    }
+
+    // 添加 getter 方法来访问 connection
+    public get connection(): Connection {
+        return this._connection;
     }
 } 
