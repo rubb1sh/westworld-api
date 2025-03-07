@@ -138,7 +138,9 @@ export class SwapService {
             };
         } catch (error) {
             console.error('执行交换操作失败:', error);
-            throw new Error(`交换执行失败: ${error.message}`);
+            // 修复错误处理
+            const errorMessage = error instanceof Error ? error.message : '未知错误';
+            throw new Error(`交换执行失败: ${errorMessage}`);
         }
     }
 
@@ -172,7 +174,9 @@ export class SwapService {
             );
         } catch (error) {
             console.error('使用私钥执行交换失败:', error);
-            throw new Error(`交换失败: ${error.message}`);
+            // 修复错误处理
+            const errorMessage = error instanceof Error ? error.message : '未知错误';
+            throw new Error(`交换失败: ${errorMessage}`);
         }
     }
 } 
