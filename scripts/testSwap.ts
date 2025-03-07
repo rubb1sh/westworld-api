@@ -13,6 +13,18 @@ const TOKENS = {
     USDC: 'Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr' // Devnet USDC
 };
 
+// 添加创建已知账户的 Keypair 的函数
+function createKeypairFromPrivateKey(privateKeyStr: string): Keypair {
+    const privateKeyBytes = bs58.decode(privateKeyStr);
+    return Keypair.fromSecretKey(new Uint8Array(privateKeyBytes));
+}
+
+// 已知账户信息
+const KNOWN_ACCOUNT = {
+    publicKey: 'B5AnksFrGr548DMXHmyz2BmHYpKCnemkACH665qNnCoE',
+    privateKey: 'Y99449Bsos2fwx26A5w4f1w2RHYCy9EC64uHX9r5PZ3JaTxNEy4YyMKpdxM8YeAXF5NxJvyVsACnjhYNFWBcW7v'
+};
+
 async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -21,30 +33,33 @@ async function main() {
     try {
         console.log('开始测试流程...');
 
+        // 使用已知账户创建 Keypair
+        console.log('\n1. 使用已知账户...');
+        const existingKeypair = createKeypairFromPrivateKey(KNOWN_ACCOUNT.privateKey);
+        console.log('账户公钥:', existingKeypair.publicKey.toString());
+        
+        // 验证公钥是否匹配
+        if (existingKeypair.publicKey.toString() !== KNOWN_ACCOUNT.publicKey) {
+            throw new Error('生成的公钥与预期不匹配');
+        }
+        console.log('公钥验证成功！');
+
         // 初始化服务
         const solanaService = new SolanaService();
         const swapService = new SwapService();
         const jupiterService = new JupiterService();
 
-        // 1. 生成新账户
-        console.log('\n1. 生成新的 Solana 账户...');
-        const newAccount = await solanaService.createAccount();
-        const keypair = Keypair.fromSecretKey(new Uint8Array(Object.values(newAccount.secretKey)));
-        console.log('账户公钥:', newAccount.publicKey);
-        console.log('账户私钥:', bs58.encode(keypair.secretKey)); // 保存这个私钥以便后续使用
-
         // 2. 请求空投
         console.log('\n2. 请求 SOL 空投...');
         const airdropAmount = 2; // 请求 2 SOL
-        await solanaService.requestAirdrop(newAccount.publicKey, airdropAmount);
+        await solanaService.requestAirdrop(existingKeypair.publicKey.toString(), airdropAmount);
         console.log(`已请求 ${airdropAmount} SOL 的空投`);
 
         // 等待空投确认
         console.log('等待空投确认...');
         await sleep(5000);
-
         // 3. 检查余额
-        const balance = await solanaService.getBalance(newAccount.publicKey);
+        const balance = await solanaService.getBalance(existingKeypair.publicKey.toString());
         console.log('当前账户余额:', balance, 'SOL');
 
         if (balance < 1) {
@@ -64,7 +79,7 @@ async function main() {
 
         // 5. 执行交换
         console.log('\n4. 执行代币交换...');
-        const privateKeyStr = bs58.encode(keypair.secretKey);
+        const privateKeyStr = bs58.encode(existingKeypair.secretKey);
         const swapResult = await swapService.executeSwapWithPrivateKey(
             privateKeyStr,
             TOKENS.SOL,
@@ -80,9 +95,8 @@ async function main() {
         console.log('预期输出金额:', swapResult.transactionDetails.expectedOutputAmount, 'USDC');
         console.log('交易费用:', swapResult.transactionDetails.fee! / LAMPORTS_PER_SOL, 'SOL');
         console.log('区块时间:', new Date(swapResult.transactionDetails.blockTime! * 1000).toLocaleString());
-
         // 7. 最终余额检查
-        const finalBalance = await solanaService.getBalance(newAccount.publicKey);
+        const finalBalance = await solanaService.getBalance(existingKeypair.publicKey.toString());
         console.log('\n6. 最终账户余额:', finalBalance, 'SOL');
 
     } catch (error) {
