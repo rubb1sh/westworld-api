@@ -1,4 +1,4 @@
-import { Keypair, Transaction, Connection, PublicKey, sendAndConfirmTransaction } from '@solana/web3.js';
+import { Keypair, Transaction, Connection, PublicKey, sendAndConfirmTransaction, VersionedTransaction } from '@solana/web3.js';
 import { JupiterService } from './JupiterService';
 import { SolanaService } from './SolanaService';
 import bs58 from 'bs58';
@@ -94,7 +94,7 @@ export class SwapService {
     private async performExchange(fromKeypair: Keypair, quoteData: any) {
         try {
             // 1. 确保 quoteData 包含必要的信息
-            if (!quoteData || !quoteData.swapTransaction) {
+            if (!quoteData ) {
                 throw new Error('无效的交换数据');
             }
 
@@ -102,26 +102,39 @@ export class SwapService {
             const { swapTransaction } = quoteData;
 
             // 3. 反序列化交易
-            const transaction = Transaction.from(Buffer.from(swapTransaction, 'base64'));
+            const transaction = VersionedTransaction.deserialize(Buffer.from(swapTransaction, 'base64'));
+            console.log(transaction);
 
             // 4. 设置最新的 blockhash
-            const latestBlockhash = await this.solanaService.connection.getLatestBlockhash();
-            transaction.recentBlockhash = latestBlockhash.blockhash;
-            transaction.feePayer = fromKeypair.publicKey;
+            // const latestBlockhash = await this.solanaService.connection.getLatestBlockhash();
+            // transaction.recentBlockhash = latestBlockhash.blockhash;
+            // transaction.feePayer = fromKeypair.publicKey;
 
             // 5. 签名交易
-            transaction.sign(fromKeypair);
+            transaction.sign([fromKeypair]);
+            const transactionBinary = transaction.serialize();
+
 
             // 6. 发送并确认交易
-            const signature = await sendAndConfirmTransaction(
-                this.solanaService.connection,
-                transaction,
-                [fromKeypair],
-                {
-                    commitment: 'confirmed',
-                    maxRetries: 3
-                }
-            );
+            const signature = await this.solanaService.connection.sendRawTransaction(transactionBinary, {
+                maxRetries: 2,
+                skipPreflight: true
+            });
+            const confirmation = await this.solanaService.connection.confirmTransaction(signature, "finalized");
+
+            if (confirmation.value.err) {
+                throw new Error(`Transaction failed: ${JSON.stringify(confirmation.value.err)}\nhttps://solscan.io/tx/${signature}/`);
+            } else console.log(`Transaction successful: https://solscan.io/tx/${signature}/`);
+
+            // const signature = await sendAndConfirmTransaction(
+            //     this.solanaService.connection,
+            //     transaction,
+            //     [fromKeypair],
+            //     {
+            //         commitment: 'confirmed',
+            //         maxRetries: 3
+            //     }
+            // );
 
             // 7. 获取交易详情
             const transactionDetails = await this.solanaService.connection.getTransaction(signature, {

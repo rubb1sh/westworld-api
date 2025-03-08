@@ -29,6 +29,7 @@ interface FormattedPrice {
     fees: {
         totalFees: number;
     };
+    swapTransaction: string;
 }
 
 export class JupiterService {
@@ -81,7 +82,7 @@ export class JupiterService {
             const swapResponse = await this.jupiterQuoteApi.swapPost({
                 swapRequest: {
                     quoteResponse,
-                    userPublicKey: '11111111111111111111111111111111', // 临时公钥，实际交易时会被替换
+                    userPublicKey: 'B5AnksFrGr548DMXHmyz2BmHYpKCnemkACH665qNnCoE', // 临时公钥，实际交易时会被替换
                     wrapAndUnwrapSol: true
                 }
             });
@@ -95,7 +96,7 @@ export class JupiterService {
                     platformFee: quoteResponse.platformFee,
                     totalFees: quoteResponse.otherAmountThreshold
                 },
-                swapTransaction: swapResponse.swapTransaction
+                swapResponse: swapResponse
             };
         } catch (error) {
             console.error('获取价格失败:', error);
@@ -205,7 +206,8 @@ export class JupiterService {
             },
             fees: {
                 totalFees: Number(price.fees.totalFees) / Math.pow(10, outputToken.decimals)
-            }
+            },
+            swapTransaction: price.swapResponse.swapTransaction
         };
     }
 
