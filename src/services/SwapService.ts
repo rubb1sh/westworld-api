@@ -2,6 +2,7 @@ import { Keypair, Transaction, Connection, PublicKey, sendAndConfirmTransaction,
 import { JupiterService } from './JupiterService';
 import { SolanaService } from './SolanaService';
 import bs58 from 'bs58';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 export class SwapService {
     private jupiterService: JupiterService;
@@ -80,10 +81,33 @@ export class SwapService {
     // 获取用户代币余额
     async getTokenBalance(walletAddress: string, tokenMint: string) {
         try {
-            // 这里需要实现代币余额查询逻辑
-            // 需要使用 SPL Token 程序来查询代币余额
-            // 这是一个待实现的功能
-            throw new Error('该功能尚未实现');
+            const walletPubkey = new PublicKey(walletAddress);
+            const mintPubkey = new PublicKey(tokenMint);
+
+            // 查找代币账户地址
+            const tokenAccounts = await this.solanaService.connection.getTokenAccountsByOwner(
+                walletPubkey,
+                {
+                    mint: mintPubkey,
+                    programId: TOKEN_PROGRAM_ID,
+                }
+            );
+
+            // 如果没有找到代币账户，返回0
+            if (tokenAccounts.value.length === 0) {
+                return 0;
+            }
+
+            // 获取代币账户信息
+            const tokenAccountInfo = await this.solanaService.connection.getTokenAccountBalance(
+                tokenAccounts.value[0].pubkey
+            );
+
+            return {
+                amount: tokenAccountInfo.value.amount,
+                decimals: tokenAccountInfo.value.decimals,
+                uiAmount: tokenAccountInfo.value.uiAmount
+            };
         } catch (error) {
             console.error('获取代币余额失败:', error);
             throw error;
