@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import walletRoutes from './routes/walletRoutes';
+import difyRoutes from './routes/dify';
 
 // 加载环境变量
 dotenv.config();
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // 路由
 app.use('/api/wallet', walletRoutes);
+app.use('/api/dify', difyRoutes);
 
 // 健康检查端点
 app.get('/health', (req, res) => {
