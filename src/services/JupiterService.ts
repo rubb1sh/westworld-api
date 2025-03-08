@@ -68,7 +68,7 @@ export class JupiterService {
             const quoteResponse = await this.jupiterQuoteApi.quoteGet({
                 inputMint,
                 outputMint,
-                amount, // 直接使用数字类型
+                amount: amount.toString(), // 直接使用传入的数量（应该已经是最小单位）
                 slippageBps: slippage * 100, // 转换为基点 (1% = 100 基点)
                 onlyDirectRoutes: false,
             });
@@ -76,6 +76,7 @@ export class JupiterService {
             if (!quoteResponse) {
                 throw new Error('没有找到可用的交易路由');
             }
+
             return {
                 inputAmount: quoteResponse.inAmount,
                 outputAmount: quoteResponse.outAmount,

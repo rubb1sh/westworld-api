@@ -61,11 +61,11 @@ async function main() {
 
         // 获取交换报价
         console.log('\n2. 获取 SOL 到 USDC 的交换报价...');
-        const swapAmount = 0.01; // 交换 0.01 SOL，主网上建议先用小额测试
+        const swapAmount = 0.01 * LAMPORTS_PER_SOL; // 转换为 lamports
         const priceSummary = await jupiterService.getPriceSummary(
             TOKENS.SOL,
             TOKENS.USDC,
-            swapAmount * LAMPORTS_PER_SOL,
+            swapAmount, // 使用 lamports
             1 // 1% 滑点
         );
         console.log('交换报价:\n', priceSummary);
