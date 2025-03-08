@@ -4,13 +4,15 @@ import { SwapService } from '../src/services/SwapService';
 import { JupiterService } from '../src/services/JupiterService';
 import bs58 from 'bs58';
 
-// 设置环境变量
-process.env.SOLANA_NETWORK = 'devnet';
+// 设置环境变量为主网
+process.env.SOLANA_NETWORK = 'mainnet-beta';
 
-// Devnet 上的代币地址
+// 主网上的代币地址
 const TOKENS = {
     SOL: 'So11111111111111111111111111111111111111112',
-    USDC: 'Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr' // Devnet USDC
+    USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',  // 主网 USDC
+    USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',  // 主网 USDT
+    BONK: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'  // 主网 BONK
 };
 
 // 添加创建已知账户的 Keypair 的函数
@@ -49,26 +51,17 @@ async function main() {
         const swapService = new SwapService();
         const jupiterService = new JupiterService();
 
-        // 2. 请求空投
-        console.log('\n2. 请求 SOL 空投...');
-        const airdropAmount = 2; // 请求 2 SOL
-        await solanaService.requestAirdrop(existingKeypair.publicKey.toString(), airdropAmount);
-        console.log(`已请求 ${airdropAmount} SOL 的空投`);
-
-        // 等待空投确认
-        console.log('等待空投确认...');
-        await sleep(5000);
-        // 3. 检查余额
+        // 检查余额
         const balance = await solanaService.getBalance(existingKeypair.publicKey.toString());
         console.log('当前账户余额:', balance, 'SOL');
 
-        if (balance < 1) {
-            throw new Error('余额不足，空投可能未成功');
+        if (balance < 0.01) { // 主网上需要确保有足够的 SOL
+            throw new Error('余额不足，请确保账户中有足够的 SOL');
         }
 
-        // 4. 获取交换报价
-        console.log('\n3. 获取 SOL 到 USDC 的交换报价...');
-        const swapAmount = 0.1; // 交换 0.1 SOL
+        // 获取交换报价
+        console.log('\n2. 获取 SOL 到 USDC 的交换报价...');
+        const swapAmount = 0.01; // 交换 0.01 SOL，主网上建议先用小额测试
         const priceSummary = await jupiterService.getPriceSummary(
             TOKENS.SOL,
             TOKENS.USDC,
@@ -77,8 +70,8 @@ async function main() {
         );
         console.log('交换报价:\n', priceSummary);
 
-        // 5. 执行交换
-        console.log('\n4. 执行代币交换...');
+        // 执行交换
+        console.log('\n3. 执行代币交换...');
         const privateKeyStr = bs58.encode(existingKeypair.secretKey);
         const swapResult = await swapService.executeSwapWithPrivateKey(
             privateKeyStr,
@@ -88,16 +81,17 @@ async function main() {
             1
         );
 
-        // 6. 输出结果
-        console.log('\n5. 交换结果:');
+        // 输出结果
+        console.log('\n4. 交换结果:');
         console.log('交易签名:', swapResult.signature);
         console.log('输入金额:', swapResult.transactionDetails.inputAmount / LAMPORTS_PER_SOL, 'SOL');
         console.log('预期输出金额:', swapResult.transactionDetails.expectedOutputAmount, 'USDC');
-        console.log('交易费用:', swapResult.transactionDetails.fee! / LAMPORTS_PER_SOL, 'SOL');
-        console.log('区块时间:', new Date(swapResult.transactionDetails.blockTime! * 1000).toLocaleString());
-        // 7. 最终余额检查
+        console.log('交易费用:', swapResult.transactionDetails.fee / LAMPORTS_PER_SOL, 'SOL');
+        console.log('区块时间:', new Date(swapResult.transactionDetails.blockTime * 1000).toLocaleString());
+
+        // 最终余额检查
         const finalBalance = await solanaService.getBalance(existingKeypair.publicKey.toString());
-        console.log('\n6. 最终账户余额:', finalBalance, 'SOL');
+        console.log('\n5. 最终账户余额:', finalBalance, 'SOL');
 
     } catch (error) {
         console.error('测试过程中发生错误:', error);
