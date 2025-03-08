@@ -61,7 +61,7 @@ async function main() {
 
         // 获取交换报价
         console.log('\n2. 获取 SOL 到 USDC 的交换报价...');
-        const swapAmount = 0.01 * LAMPORTS_PER_SOL; // 转换为 lamports
+        const swapAmount = 0.002 * LAMPORTS_PER_SOL; // 转换为 lamports
         const priceSummary = await jupiterService.getPriceSummary(
             TOKENS.SOL,
             TOKENS.USDC,
@@ -86,8 +86,8 @@ async function main() {
         console.log('交易签名:', swapResult.signature);
         console.log('输入金额:', swapResult.transactionDetails.inputAmount / LAMPORTS_PER_SOL, 'SOL');
         console.log('预期输出金额:', swapResult.transactionDetails.expectedOutputAmount, 'USDC');
-        console.log('交易费用:', swapResult.transactionDetails.fee / LAMPORTS_PER_SOL, 'SOL');
-        console.log('区块时间:', new Date(swapResult.transactionDetails.blockTime * 1000).toLocaleString());
+        console.log('交易费用:', swapResult.transactionDetails.fe! / LAMPORTS_PER_SOL, 'SOL');
+        console.log('区块时间:', new Date(swapResult.transactionDetails.blockTime! * 1000).toLocaleString());
 
         // 最终余额检查
         const finalBalance = await solanaService.getBalance(existingKeypair.publicKey.toString());
