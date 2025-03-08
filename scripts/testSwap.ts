@@ -86,7 +86,7 @@ async function main() {
         console.log('交易签名:', swapResult.signature);
         console.log('输入金额:', swapResult.transactionDetails.inputAmount / LAMPORTS_PER_SOL, 'SOL');
         console.log('预期输出金额:', swapResult.transactionDetails.expectedOutputAmount, 'USDC');
-        console.log('交易费用:', swapResult.transactionDetails.fe! / LAMPORTS_PER_SOL, 'SOL');
+        console.log('交易费用:', swapResult.transactionDetails.fee! / LAMPORTS_PER_SOL, 'SOL');
         console.log('区块时间:', new Date(swapResult.transactionDetails.blockTime! * 1000).toLocaleString());
 
         // 最终余额检查
