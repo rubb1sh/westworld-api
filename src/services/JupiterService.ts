@@ -68,14 +68,23 @@ export class JupiterService {
             const quoteResponse = await this.jupiterQuoteApi.quoteGet({
                 inputMint,
                 outputMint,
-                amount, // 直接使用传入的数量（应该已经是最小单位）
-                slippageBps: slippage * 100, // 转换为基点 (1% = 100 基点)
+                amount,
+                slippageBps: slippage * 100,
                 onlyDirectRoutes: false,
-            })
+            });
 
             if (!quoteResponse) {
                 throw new Error('没有找到可用的交易路由');
             }
+
+            // 获取交换交易
+            const swapResponse = await this.jupiterQuoteApi.swapPost({
+                swapRequest: {
+                    quoteResponse,
+                    userPublicKey: '11111111111111111111111111111111', // 临时公钥，实际交易时会被替换
+                    wrapAndUnwrapSol: true
+                }
+            });
 
             return {
                 inputAmount: quoteResponse.inAmount,
@@ -85,7 +94,8 @@ export class JupiterService {
                 fees: {
                     platformFee: quoteResponse.platformFee,
                     totalFees: quoteResponse.otherAmountThreshold
-                }
+                },
+                swapTransaction: swapResponse.swapTransaction
             };
         } catch (error) {
             console.error('获取价格失败:', error);
