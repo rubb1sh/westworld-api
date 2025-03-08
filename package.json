@@ -1,7 +1,7 @@
 {
     "name": "node-typescript-starter",
     "version": "1.0.0",
-    "main": "dist/server.js",
+    "main": "dist/app.js",
     "license": "MIT",
     "description": "Start building your API with Express JS & Typescript",
     "author": {
@@ -19,9 +19,9 @@
         "docker:start": "docker-compose up",
         "docker:stop": "docker-compose down",
         "build": "rm -rf dist && babel src --extensions \".ts\" --out-dir dist",
-        "serve": "node -r dotenv/config -r ts-node/register -r tsconfig-paths/register dist/server.js",
-        "start": "node -r ts-node/register -r tsconfig-paths/register dist/server.js",
-        "daemonize": "pm2 start ts-node -- -r tsconfig-paths/register src/server.ts",
+        "serve": "node -r dotenv/config -r ts-node/register -r tsconfig-paths/register dist/app.js",
+        "start": "node -r ts-node/register -r tsconfig-paths/register dist/app.js",
+        "daemonize": "pm2 start ts-node -- -r tsconfig-paths/register src/app.ts",
         "make:route": "sh bin/make_route.sh",
         "make:crud-route": "sh bin/make_crud_route.sh",
         "make:model": "sh bin/make_model.sh",

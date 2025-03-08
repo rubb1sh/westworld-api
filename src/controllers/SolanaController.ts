@@ -13,7 +13,7 @@ export class SolanaController {
             const { publicKey } = req.params;
             const balance = await this.solanaService.getBalance(publicKey);
             res.json({ balance });
-        } catch (error) {
+        } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
     }
@@ -22,7 +22,7 @@ export class SolanaController {
         try {
             const account = await this.solanaService.createAccount();
             res.json(account);
-        } catch (error) {
+        } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
     }
@@ -32,7 +32,7 @@ export class SolanaController {
             const { publicKey, amount } = req.body;
             const signature = await this.solanaService.requestAirdrop(publicKey, amount);
             res.json({ signature });
-        } catch (error) {
+        } catch (error:any) {
             res.status(400).json({ error: error.message });
         }
     }
