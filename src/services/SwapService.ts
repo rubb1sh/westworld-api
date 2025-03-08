@@ -126,7 +126,7 @@ export class SwapService {
             const { swapTransaction } = quoteData;
 
             // 3. 反序列化交易
-            const transaction = VersionedTransaction.deserialize(Buffer.from(swapTransaction, 'base64'));
+            const transaction = VersionedTransaction.deserialize(Uint8Array.from(Buffer.from(swapTransaction, 'base64')));
 
             // 4. 设置最新的 blockhash
             // const latestBlockhash = await this.solanaService.connection.getLatestBlockhash();

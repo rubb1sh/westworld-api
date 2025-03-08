@@ -1,85 +1,112 @@
-# Node + Express + Typescript
+# Solana钱包API
 
-## Requirements
+这个API提供了Solana钱包的基本功能，包括代币交换和余额查询。
 
--   **_Node.js_** version 10+ with **_npm_** (mandatory)
--   **_Git_** (mandatory)
+## 环境配置
 
-## Recommendations
+1. 复制`.env.example`文件并重命名为`.env`
+2. 在`.env`文件中填写以下配置：
+   - `API_KEY`: API访问密钥
+   - `TEST_WALLET_PUBLIC_KEY`: 钱包公钥
+   - `TEST_WALLET_PRIVATE_KEY`: 钱包私钥
+   - `SOLANA_NETWORK`: Solana网络（默认为devnet）
+   - `SOLANA_RPC_ENDPOINT`: Solana RPC端点（可选）
 
--   **_Yarn_** - An alternative dependencies manager
--   **_Visual Studio Code_** - A popular editor, especially for `Javascript | Typescript`
+## API端点
 
-## Installation
+### 1. 代币交换
 
-1. Clone the repository
+**端点**: `POST /api/wallet/swap`
 
-```shell
-git clone
+**请求头**:
+```
+x-api-key: your_api_key_here
+Content-Type: application/json
 ```
 
-2. Install the dependencies
-
-```shell
-yarn install
+**请求体**:
+```json
+{
+  "inputMint": "代币输入铸币地址",
+  "outputMint": "代币输出铸币地址",
+  "amount": 数量,
+  "slippage": 滑点百分比(可选，默认为1),
+  "action": "buy或sell"
+}
 ```
 
-3. Start your development server
-
-```shell
-yarn dev
+**响应示例**:
+```json
+{
+  "success": true,
+  "data": {
+    "signature": "交易签名",
+    "summary": "交易概要",
+    "transactionDetails": {
+      "fromAddress": "发送地址",
+      "inputMint": "输入代币铸币地址",
+      "outputMint": "输出代币铸币地址",
+      "inputAmount": 输入数量,
+      "expectedOutputAmount": "预期输出数量",
+      "slippage": 滑点百分比,
+      "timestamp": "时间戳",
+      "blockTime": 区块时间,
+      "slot": 槽位,
+      "fee": 交易费用
+    }
+  },
+  "message": "代币购买/出售成功"
+}
 ```
 
-Or with docker
+### 2. 查询钱包余额
 
-```shell
-yarn dockerize
+**端点**: `GET /api/wallet/balance`
+
+**请求头**:
+```
+x-api-key: your_api_key_here
 ```
 
-The above command will start the server in a docker service (mapped to http://localhost:<SERVER_PORT>)
+**查询参数**:
+- `tokenMint`: (可选) 代币铸币地址，如果提供则返回该代币的余额
 
-In this case, you may need to override the default environment variables.
-Copy the `.env.dist` template in your custom `.env` file.
-
-```shell
-cp .env.dist .env
+**响应示例**:
+```json
+{
+  "success": true,
+  "data": {
+    "walletAddress": "钱包地址",
+    "solBalance": SOL余额,
+    "tokenBalance": {
+      "mint": "代币铸币地址",
+      "amount": "代币数量",
+      "decimals": 小数位数,
+      "uiAmount": 用户界面显示数量
+    }
+  },
+  "message": "钱包余额查询成功"
+}
 ```
 
-```ini
-# .env
-NODE_ENV=development
-SERVER_PORT=4000
+## 错误处理
+
+所有API端点在发生错误时都会返回以下格式的响应：
+
+```json
+{
+  "success": false,
+  "message": "错误描述"
+}
 ```
 
-4. Add your `.ts` files into the `src` directory
+常见错误状态码：
+- `400`: 请求参数错误
+- `401`: API密钥无效或缺失
+- `500`: 服务器内部错误
 
-## Start working !
+## 安全注意事项
 
-When saving a file :
-
-1. The `.ts` files will be transpiled in `.js` files and output in the `dist` directory
-2. The server will automatically restart
-
-### Adding routes
-
-1. Create a new `.ts` file in the `routes` folder.  
-   The file _MUST_ export an Express Router
-2. Add the router inside the `router.ts`
-
-That's it ! (^\_^)
-
-## Deployment
-
-To run the server :
-
-1. Build the `.js` files
-
-```shell
-yarn build
-```
-
-2. Start the server
-
-```shell
-yarn serve
-```
+- 请确保API密钥和钱包私钥的安全，不要在公共场合泄露
+- 建议在生产环境中使用HTTPS加密传输
+- 定期更换API密钥以提高安全性
