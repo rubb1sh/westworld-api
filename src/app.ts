@@ -33,6 +33,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/wallet', walletRoutes);
 app.use('/api/dify', difyRoutes);
 
+// Webhook API端点
+app.post('/webhook', (req, res) => {
+  console.log('收到Webhook请求:');
+  console.log('请求头:', JSON.stringify(req.headers, null, 2));
+  console.log('请求体:', JSON.stringify(req.body, null, 2));
+  console.log('查询参数:', JSON.stringify(req.query, null, 2));
+  
+  // 返回成功响应
+  res.status(200).json({ 
+    status: 'success', 
+    message: 'Webhook数据已接收并处理',
+    receivedAt: new Date().toISOString()
+  });
+});
+
 // 健康检查端点
 app.get('/health', (req, res) => {
   res.status(200).json({ 
