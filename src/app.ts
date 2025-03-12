@@ -27,6 +27,7 @@ if (!TEST_WALLET_PUBLIC_KEY || !TEST_WALLET_PRIVATE_KEY) {
 // 中间件
 app.use(cors());
 app.use(express.json());
+app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 
 // 路由
@@ -36,15 +37,37 @@ app.use('/api/dify', difyRoutes);
 // Webhook API端点
 app.post('/webhook', (req, res) => {
   console.log('收到Webhook请求:');
+  console.log('请求方法:', req.method);
   console.log('请求头:', JSON.stringify(req.headers, null, 2));
-  console.log('请求体:', JSON.stringify(req.body, null, 2));
+  
+  // 检查Content-Type
+  console.log('Content-Type:', req.headers['content-type']);
+  
+  // 打印原始请求体
+  console.log('原始请求体:', req.body);
+  
+  // 尝试解析不同格式的数据
+  let parsedBody = req.body;
+  if (typeof req.body === 'string') {
+    try {
+      // 尝试将字符串解析为JSON
+      parsedBody = JSON.parse(req.body);
+      console.log('解析后的JSON请求体:', parsedBody);
+    } catch (e) {
+      console.log('请求体是纯文本格式，无法解析为JSON');
+    }
+  }
+  
   console.log('查询参数:', JSON.stringify(req.query, null, 2));
   
   // 返回成功响应
   res.status(200).json({ 
     status: 'success', 
     message: 'Webhook数据已接收并处理',
-    receivedAt: new Date().toISOString()
+    receivedAt: new Date().toISOString(),
+    contentType: req.headers['content-type'],
+    method: req.method,
+    bodyType: typeof req.body
   });
 });
 
